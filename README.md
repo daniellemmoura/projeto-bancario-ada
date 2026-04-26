@@ -50,8 +50,8 @@ Utilizado para listar, criar clientes e criar contas.
 }
 
 2. Token de Cliente (Alice)
-Nota: A cliente Alice precisa ser criada pelo Gerente primeiro (POST /clientes), utilizando o CPF ajustado: 123.456.789-09.
-Após criada, faça login para obter o token de operações bancárias (Depósitos, Saques, Transferências e Extratos).
+`Nota: A cliente Alice precisa ser criada pelo Gerente primeiro (POST /clientes), utilizando o CPF ajustado: 123.456.789-09.
+Após criada, faça login para obter o token de operações bancárias (Depósitos, Saques, Transferências e Extratos).`
 
 - **Endpoint:** `POST http://localhost:8080/auth/login`
 
