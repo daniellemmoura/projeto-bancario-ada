@@ -17,30 +17,31 @@ Projeto final de API RESTful simulando operações bancárias básicas, desenvol
 3. Abra o terminal na pasta raiz do projeto e execute o comando:
    ```bash
    ./mvnw clean quarkus:dev
-4. O Quarkus fará o download das dependências, iniciará um contêiner do PostgreSQL automaticamente e subirá a aplicação na porta 8080.
+   ```
+4. O Quarkus fará o download das dependências, iniciará um contêiner do PostgreSQL automaticamente e subirá a aplicação na porta `8080`.
+
+---
 
 ## Notas Técnicas e Adaptações
 
-Durante o desenvolvimento e execução dos testes, foi identificada uma necessidade técnica de adaptação nos dados de exemplo do enunciado para cumprir a exigência do Critério 4 (Bean Validation).
+Durante o desenvolvimento e execução dos testes, foi identificada uma necessidade técnica de adaptação nos dados de exemplo do enunciado para cumprir a exigência do **Critério 4 (Bean Validation)**.
 
-A Validação do CPF da Cliente Alice:
+**A Validação do CPF da Cliente Alice:**
+* O enunciado sugere o uso do CPF fictício `123.456.789-00` para a criação da cliente.
+* Para garantir a nota máxima em validação, a entidade `Cliente` foi protegida com a anotação `@CPF` (Hibernate Validator). Esta anotação não verifica apenas o formato (máscara), mas executa o **cálculo matemático real** dos dígitos verificadores (algoritmo de módulo 11).
+* Como o número `123.456.789-00` é matematicamente inválido, o Quarkus o bloqueia (Status `400`).
+* **A Solução:** Para que o fluxo de testes funcione perfeitamente, o CPF de exemplo foi ajustado para **`123.456.789-09`** (que é a terminação matematicamente correta para esta base numérica). Pedimos a gentileza de utilizar este CPF na hora da correção para obter o status `201 Created`.
 
-O enunciado sugere o uso do CPF fictício 123.456.789-00 para a criação da cliente.
-
-Para garantir a nota máxima em validação, a entidade Cliente foi protegida com a anotação @CPF (Hibernate Validator). Esta anotação não verifica apenas o formato (máscara), mas executa o cálculo matemático real dos dígitos verificadores (algoritmo de módulo 11).
-
-Como o número 123.456.789-00 é matematicamente inválido, o Quarkus o bloqueia (Status 400).
-
-A Solução: Para que o fluxo de testes funcione perfeitamente, o CPF de exemplo foi ajustado para 123.456.789-09 (que é a terminação matematicamente correta para esta base numérica). Pedimos a gentileza de utilizar este CPF na hora da correção para obter o status 201 Created.
+---
 
 ## Autenticação e Testes
 
-A API é protegida por JWT (@RolesAllowed). Para facilitar a correção, utilize as credenciais abaixo na rota de Login para obter os tokens necessários.
+A API é protegida por JWT (`@RolesAllowed`). Utilize as credenciais abaixo na rota de Login para obter os tokens necessários.
 
-1. Token de Gerente (Acesso Total)
+### 1. Token de Gerente (Acesso Total)
 Utilizado para listar, criar clientes e criar contas.
 
-- **Endpoint:** `POST http://localhost:8080/auth/login`
+**Endpoint:** `POST /auth/login`
 
 **Body Request:**
 ```json
@@ -48,19 +49,24 @@ Utilizado para listar, criar clientes e criar contas.
   "email": "gerente@banco.com",
   "senha": "admin123"
 }
+```
 
-2. Token de Cliente (Alice)
-`Nota: A cliente Alice precisa ser criada pelo Gerente primeiro (POST /clientes), utilizando o CPF ajustado: 123.456.789-09.
-Após criada, faça login para obter o token de operações bancárias (Depósitos, Saques, Transferências e Extratos).`
+### 2. Token de Cliente (Alice)
 
-- **Endpoint:** `POST http://localhost:8080/auth/login`
+> [!NOTE]
+> A cliente Alice precisa ser criada pelo Gerente primeiro (`POST /clientes`), utilizando o CPF ajustado: `123.456.789-09`.
+
+Após criada, faça login para obter o token de operações bancárias (Depósitos, Saques, Transferências e Extratos).
+
+**Endpoint:** `POST /auth/login`
 
 **Body Request:**
 ```json
 {
-    "email": "alice@banco.com",
-    "senha": "senha123"
+  "email": "alice@banco.com",
+  "senha": "senha123"
 }
+```
 
-[!WARNING]
-**Atenção:** Envie o token gerado no Header `Authorization` como `Bearer <token>` em todas as requisições protegidas.
+> [!IMPORTANT]
+> **Uso do Token:** Copie o valor gerado e envie no Header `Authorization` com o formato `Bearer <seu_token>` em todas as requisições subsequentes para endpoints protegidos.
