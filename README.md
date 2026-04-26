@@ -40,28 +40,27 @@ A API é protegida por JWT (@RolesAllowed). Para facilitar a correção, utilize
 1. Token de Gerente (Acesso Total)
 Utilizado para listar, criar clientes e criar contas.
 
-- POST http://localhost:8080/auth/login
+- **Endpoint:** `POST http://localhost:8080/auth/login`
 
-- Body:
-
-- JSON
+**Body Request:**
+```json
 {
-    "email": "gerente@banco.com",
-    "senha": "admin123"
+  "email": "gerente@banco.com",
+  "senha": "admin123"
 }
 
 2. Token de Cliente (Alice)
 Nota: A cliente Alice precisa ser criada pelo Gerente primeiro (POST /clientes), utilizando o CPF ajustado: 123.456.789-09.
 Após criada, faça login para obter o token de operações bancárias (Depósitos, Saques, Transferências e Extratos).
 
-- POST http://localhost:8080/auth/login
+- **Endpoint:** `POST http://localhost:8080/auth/login`
 
-- Body:
-
-- JSON
+**Body Request:**
+```json
 {
     "email": "alice@banco.com",
     "senha": "senha123"
 }
 
-## Atenção: Envie o token gerado no Header Authorization como Bearer <token> em todas as requisições protegidas.
+[!WARNING]
+**Atenção:** Envie o token gerado no Header `Authorization` como `Bearer <token>` em todas as requisições protegidas.
